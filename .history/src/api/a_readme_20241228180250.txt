@@ -1,0 +1,561 @@
+一、组件化开发
+
+在组件化开发中，保持每个 Vue 组件的代码简洁和易于维护是很重要的。
+通常建议每个 Vue 组件的代码控制在 200 行以内。
+如果组件的代码超过了这个范围，可能需要考虑将其拆分为更小的子组件。这样可以提高代码的可读性和可维护性。
+不需要考虑组件的复用，如果一个组件需要数据，那应该由它本身发起请求，在主vue文件中引入这个组件即可
+参照：Region.vue 与 其组件 components/doctor/RegionMap.vue 和 RegionTable.vue的设计
+
+二、请求
+请求都采用异步请求 .vue中调用后 得到response json格式类型
+response 的结构是：
+{
+    "data": 数据值，
+    "message":"后端传入的一些信息"，
+    "code": 数字值
+}
+
+data部分，前端和后端要商议好数据的格式，在能完成功能的情况下，尽可能的简化传输数据
+
+code值与信息对应情况：
+1. 200 正常
+2. 404 未找到
+3. 500 服务器错误
+4. 403 禁止访问
+5. 400 请求错误
+6. 401 未授权
+7. 301 永久重定向
+8. 302 临时重定向
+9. 304 未修改
+10. 503 服务器不可用
+11. 504 网关超时
+12. 502 网关错误
+13. 400 请求错误
+
+例子：
+{
+  "code": 200,
+  "data": [
+    {
+      "children": [
+        {
+          "description": null,
+          "id": 2,
+          "name": "三门峡市区",
+          "parent_id": 1
+        },
+        {
+          "description": null,
+          "id": 3,
+          "name": "义马市",
+          "parent_id": 1
+        },
+        {
+          "description": null,
+          "id": 4,
+          "name": "灵宝市",
+          "parent_id": 1
+        },
+        {
+          "description": null,
+          "id": 5,
+          "name": "渑池县",
+          "parent_id": 1
+        },
+        {
+          "description": null,
+          "id": 6,
+          "name": "陕州区（原陕县）",
+          "parent_id": 1
+        },
+        {
+          "description": null,
+          "id": 7,
+          "name": "卢氏县",
+          "parent_id": 1
+        }
+      ],
+      "description": null,
+      "id": 1,
+      "name": "三门峡市",
+      "parent_id": 0
+    },
+    {
+      "children": [
+        {
+          "description": null,
+          "id": 9,
+          "name": "洛阳市区",
+          "parent_id": 8
+        },
+        {
+          "description": null,
+          "id": 10,
+          "name": "偃师区",
+          "parent_id": 8
+        },
+        {
+          "description": null,
+          "id": 11,
+          "name": "孟津区",
+          "parent_id": 8
+        },
+        {
+          "description": null,
+          "id": 12,
+          "name": "新安县",
+          "parent_id": 8
+        },
+        {
+          "description": null,
+          "id": 13,
+          "name": "栾川县",
+          "parent_id": 8
+        },
+        {
+          "description": null,
+          "id": 14,
+          "name": "嵩县",
+          "parent_id": 8
+        },
+        {
+          "description": null,
+          "id": 15,
+          "name": "汝阳县",
+          "parent_id": 8
+        },
+        {
+          "description": null,
+          "id": 16,
+          "name": "宜阳县",
+          "parent_id": 8
+        },
+        {
+          "description": null,
+          "id": 17,
+          "name": "洛宁县",
+          "parent_id": 8
+        },
+        {
+          "description": null,
+          "id": 18,
+          "name": "伊川县",
+          "parent_id": 8
+        }
+      ],
+      "description": null,
+      "id": 8,
+      "name": "洛阳市",
+      "parent_id": 0
+    },
+    {
+      "children": [
+        {
+          "description": null,
+          "id": 20,
+          "name": "济源示范区",
+          "parent_id": 19
+        }
+      ],
+      "description": null,
+      "id": 19,
+      "name": "济源示范区",
+      "parent_id": 0
+    },
+    {
+      "children": [
+        {
+          "description": null,
+          "id": 22,
+          "name": "沁阳市",
+          "parent_id": 21
+        },
+        {
+          "description": null,
+          "id": 23,
+          "name": "孟州市",
+          "parent_id": 21
+        },
+        {
+          "description": null,
+          "id": 24,
+          "name": "修武县",
+          "parent_id": 21
+        },
+        {
+          "description": null,
+          "id": 25,
+          "name": "博爱县",
+          "parent_id": 21
+        },
+        {
+          "description": null,
+          "id": 26,
+          "name": "武陟县",
+          "parent_id": 21
+        },
+        {
+          "description": null,
+          "id": 27,
+          "name": "温县",
+          "parent_id": 21
+        }
+      ],
+      "description": null,
+      "id": 21,
+      "name": "焦作市",
+      "parent_id": 0
+    },
+    {
+      "children": [
+        {
+          "description": null,
+          "id": 29,
+          "name": "郑州市区",
+          "parent_id": 28
+        },
+        {
+          "description": null,
+          "id": 30,
+          "name": "巩义市",
+          "parent_id": 28
+        },
+        {
+          "description": null,
+          "id": 31,
+          "name": "新郑市",
+          "parent_id": 28
+        },
+        {
+          "description": null,
+          "id": 32,
+          "name": "航空港",
+          "parent_id": 28
+        },
+        {
+          "description": null,
+          "id": 33,
+          "name": "荥阳市",
+          "parent_id": 28
+        },
+        {
+          "description": null,
+          "id": 34,
+          "name": "中牟县",
+          "parent_id": 28
+        },
+        {
+          "description": "规划供水范围",
+          "id": 35,
+          "name": "登封市*",
+          "parent_id": 28
+        }
+      ],
+      "description": null,
+      "id": 28,
+      "name": "郑州市",
+      "parent_id": 0
+    },
+    {
+      "children": [
+        {
+          "description": null,
+          "id": 37,
+          "name": "开封市区",
+          "parent_id": 36
+        },
+        {
+          "description": null,
+          "id": 38,
+          "name": "杞县",
+          "parent_id": 36
+        },
+        {
+          "description": null,
+          "id": 39,
+          "name": "通许县",
+          "parent_id": 36
+        },
+        {
+          "description": null,
+          "id": 40,
+          "name": "尉氏县",
+          "parent_id": 36
+        },
+        {
+          "description": null,
+          "id": 41,
+          "name": "祥符县（原开封县）",
+          "parent_id": 36
+        },
+        {
+          "description": null,
+          "id": 42,
+          "name": "兰考县",
+          "parent_id": 36
+        }
+      ],
+      "description": null,
+      "id": 36,
+      "name": "开封市",
+      "parent_id": 0
+    },
+    {
+      "children": [
+        {
+          "description": null,
+          "id": 44,
+          "name": "新乡市区",
+          "parent_id": 43
+        },
+        {
+          "description": null,
+          "id": 45,
+          "name": "卫辉市",
+          "parent_id": 43
+        },
+        {
+          "description": null,
+          "id": 46,
+          "name": "新乡县",
+          "parent_id": 43
+        },
+        {
+          "description": null,
+          "id": 47,
+          "name": "获嘉县",
+          "parent_id": 43
+        },
+        {
+          "description": null,
+          "id": 48,
+          "name": "原阳县",
+          "parent_id": 43
+        },
+        {
+          "description": null,
+          "id": 49,
+          "name": "延津县",
+          "parent_id": 43
+        },
+        {
+          "description": null,
+          "id": 50,
+          "name": "封丘县",
+          "parent_id": 43
+        },
+        {
+          "description": null,
+          "id": 51,
+          "name": "长垣县",
+          "parent_id": 43
+        }
+      ],
+      "description": null,
+      "id": 43,
+      "name": "新乡市",
+      "parent_id": 0
+    },
+    {
+      "children": [
+        {
+          "description": null,
+          "id": 53,
+          "name": "濮阳市",
+          "parent_id": 52
+        },
+        {
+          "description": null,
+          "id": 54,
+          "name": "清丰县",
+          "parent_id": 52
+        },
+        {
+          "description": null,
+          "id": 55,
+          "name": "南乐县",
+          "parent_id": 52
+        },
+        {
+          "description": null,
+          "id": 56,
+          "name": "范县",
+          "parent_id": 52
+        },
+        {
+          "description": null,
+          "id": 57,
+          "name": "台前县",
+          "parent_id": 52
+        },
+        {
+          "description": null,
+          "id": 58,
+          "name": "濮阳县",
+          "parent_id": 52
+        }
+      ],
+      "description": null,
+      "id": 52,
+      "name": "濮阳市",
+      "parent_id": 0
+    },
+    {
+      "children": [
+        {
+          "description": null,
+          "id": 60,
+          "name": "滑县",
+          "parent_id": 59
+        },
+        {
+          "description": null,
+          "id": 61,
+          "name": "内黄县",
+          "parent_id": 59
+        }
+      ],
+      "description": null,
+      "id": 59,
+      "name": "安阳市",
+      "parent_id": 0
+    },
+    {
+      "children": [
+        {
+          "description": "规划供水范围",
+          "id": 63,
+          "name": "浚县*",
+          "parent_id": 62
+        }
+      ],
+      "description": null,
+      "id": 62,
+      "name": "鹤壁市",
+      "parent_id": 0
+    },
+    {
+      "children": [
+        {
+          "description": null,
+          "id": 65,
+          "name": "商丘市区",
+          "parent_id": 64
+        },
+        {
+          "description": null,
+          "id": 66,
+          "name": "虞城县",
+          "parent_id": 64
+        },
+        {
+          "description": null,
+          "id": 67,
+          "name": "民权县",
+          "parent_id": 64
+        },
+        {
+          "description": null,
+          "id": 68,
+          "name": "宁陵县",
+          "parent_id": 64
+        },
+        {
+          "description": null,
+          "id": 69,
+          "name": "睢县",
+          "parent_id": 64
+        },
+        {
+          "description": null,
+          "id": 70,
+          "name": "柘城县",
+          "parent_id": 64
+        },
+        {
+          "description": null,
+          "id": 71,
+          "name": "夏邑县",
+          "parent_id": 64
+        }
+      ],
+      "description": null,
+      "id": 64,
+      "name": "商丘市",
+      "parent_id": 0
+    },
+    {
+      "children": [
+        {
+          "description": null,
+          "id": 73,
+          "name": "扶沟县",
+          "parent_id": 72
+        },
+        {
+          "description": null,
+          "id": 74,
+          "name": "西华县",
+          "parent_id": 72
+        },
+        {
+          "description": null,
+          "id": 75,
+          "name": "太康县",
+          "parent_id": 72
+        },
+        {
+          "description": null,
+          "id": 76,
+          "name": "鹿邑县",
+          "parent_id": 72
+        }
+      ],
+      "description": null,
+      "id": 72,
+      "name": "周口市",
+      "parent_id": 0
+    },
+    {
+      "children": [
+        {
+          "description": null,
+          "id": 78,
+          "name": "鄢陵县",
+          "parent_id": 77
+        },
+        {
+          "description": null,
+          "id": 79,
+          "name": "长葛市",
+          "parent_id": 77
+        }
+      ],
+      "description": null,
+      "id": 77,
+      "name": "许昌市",
+      "parent_id": 0
+    },
+    {
+      "children": [
+        {
+          "description": null,
+          "id": 81,
+          "name": "汝州市",
+          "parent_id": 80
+        },
+        {
+          "description": null,
+          "id": 82,
+          "name": "郏县",
+          "parent_id": 80
+        }
+      ],
+      "description": null,
+      "id": 80,
+      "name": "平顶山市",
+      "parent_id": 0
+    }
+  ],
+  "message": "获取所有地区信息成功"
+}
